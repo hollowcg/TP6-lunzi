@@ -1,0 +1,145 @@
+﻿{include file="base/_meta" /}
+</head>
+<body>
+
+
+<!-- 正文开始 -->
+<div class="layui-fluid  layui-form model-form layui-form-pane" style="background: #fff;padding: 20px;">
+    <div class="layui-tab">
+        <div class="layui-tab layui-tab-card">
+            <ul class="layui-tab-title">
+                <li class="layui-this">基本设置</li>
+                <li>七牛云</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">网站标题</label>
+                        <div class="layui-input-block">
+                            <input name="title" placeholder="请输入" type="text" class="layui-input"
+                                   lay-verType="tips" autocomplete="off" value="{:langSite('title')}"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">网站logo</label>
+                        <div class="layui-input-inline" style="width: 420px;">
+                            <input name="logo" placeholder="" type="text" class="layui-input"
+                                   lay-verType="tips" autocomplete="off" value="{:langSite('logo')}"/>
+                        </div>
+                        <div class="layui-input-inline" style="width: 82px;">
+                            <button class="layui-btn layui-btn-lg" id="logo">上传</button>
+                        </div>
+                        <div class="layui-input-inline">
+                            <img src="{:langSite('logo')}" alt="" style="height: 38px;width: auto;">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">上传类型</label>
+                        <div class="layui-input-block">
+                            <?php $upload_type=langSite('upload_type');?>
+                            <input type="radio" name="upload_type" value="qiniuyun" title="七牛云" {eq name="$upload_type" value="qiniuyun"}checked{/eq}>
+                            <input type="radio" name="upload_type" value="localhost" title="本地服务器" {eq name="$upload_type" value="localhost"}checked{/eq}>
+                        </div>
+                    </div>
+
+                </div>
+
+<!--                七牛云-->
+                <div class="layui-tab-item">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">AK</label>
+                        <div class="layui-input-block">
+                            <input name="qiniuyun_ak" placeholder="请输入" type="text" class="layui-input"
+                                   lay-verType="tips" autocomplete="off" value="{:langSite('qiniuyun_ak')}"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">SK</label>
+                        <div class="layui-input-block">
+                            <input name="qiniuyun_sk" placeholder="请输入" type="text" class="layui-input"
+                                   lay-verType="tips"  autocomplete="off" value="{:langSite('qiniuyun_sk')}"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">空间名</label>
+                        <div class="layui-input-block">
+                            <input name="qiniuyun_bucket" placeholder="请输入" type="text" class="layui-input"
+                                   lay-verType="tips" autocomplete="off" value="{:langSite('qiniuyun_bucket')}"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">绑定域名</label>
+                        <div class="layui-input-block">
+                            <input name="qiniuyun_domain" placeholder="请输入http://域名" type="text" class="layui-input"
+                                   lay-verType="tips" autocomplete="off" value="{:langSite('qiniuyun_domain')}"/>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+<div class="layui-form-item text-left">
+    <button class="layui-btn layui-btn-lg " lay-filter="*" lay-submit>保存</button>
+</div>
+</div>
+
+
+
+<!-- js部分 -->
+{include file="base/_script" /}
+<script>
+    layui.use(['layer', 'form', 'util', 'admin','index','element','upload'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var util = layui.util;
+        var admin = layui.admin
+            ,index = layui.index
+            ,element = layui.element
+            ,upload = layui.upload;
+
+
+        form.on('submit(*)', function(data){
+            $.post("{:url('/system/systemSave')}",data.field,function (ret) {
+                if (ret.code == 0){
+                    layer.msg(ret.msg,{icon:6,time:1500})
+                }else{
+                    layer.msg(ret.msg,{icon:5,time:1500})
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        var uploadInst = upload.render({
+            elem: '#logo' //绑定元素
+            ,url: "{:url('/system/uploads')}" //上传接口
+            ,done: function(res){
+                console.log(res)
+                //上传完毕回调
+                if (res.code == 0){
+                    $("#logo").parent().next().find('img').attr('src',res.data.src);
+                    $("#logo").parent().prev().find('input').val(res.data.src);
+                } else{
+                    layer.msg(res.msg,{icon:5,time:1500})
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

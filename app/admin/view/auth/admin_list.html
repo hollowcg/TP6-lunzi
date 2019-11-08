@@ -1,0 +1,180 @@
+﻿{include file="base/_meta" /}
+</head>
+<body>
+
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+
+                    <div class="layui-inline">
+                        <div class="layui-input-inline mr0">
+                            <input name="name" class="layui-input" type="text" placeholder="用户名|昵称" autocomplete="off"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <div class="layui-input-inline mr0">
+                            <select name="admin_role_id">
+                                <option value="">选择角色</option>
+                                {notempty name="$adminRole"}
+                                {volist name="adminRole" id="voRole"}
+                                <option value="{$voRole.id}">{$voRole.name}</option>
+                                {/volist}
+                                {/notempty}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline layui-btn-group">
+                        <button class="layui-btn icon-btn" lay-filter="formSubSearchUser" lay-submit>
+                            <i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                        <button id="btnAddUser" class="layui-btn icon-btn">添加</button>
+                        <button id="btnDel" class="layui-btn icon-btn">删除</button>
+                    </div>
+                </div>
+            </div>
+
+            <table class="layui-table" id="KT_table" lay-filter="KT_table"></table>
+        </div>
+    </div>
+</div>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="tableBarUser">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<!-- 表格状态列 -->
+<script type="text/html" id="tableStateUser">
+    <input type="checkbox" lay-filter="ckStateUser" value="{{d.id}}" lay-skin="switch"
+           lay-text="正常|禁用" {{d.state==1?'checked':''}}/>
+</script>
+
+<!-- js部分 -->
+{include file="base/_script" /}
+<script>
+    layui.use(['layer', 'form', 'table', 'util', 'admin','index'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+        var admin = layui.admin
+            ,index = layui.index;
+
+        // 渲染表格
+        var KT_table = table.render({
+            elem: '#KT_table',
+            url: "{:url('/auth/adminList')}",
+            page: true,
+            cellMinWidth: 100,
+            cols: [[
+                {type: 'checkbox', fixed: 'left'},
+                {field: 'id', title: 'ID',sort: true},
+                {field: 'username', title: '账号'},
+                {field: 'nickname', title: '用户名'},
+                {field: 'password', title: '密码'},
+                {field: 'adminRoleName', title: '角色'},
+                {field: 'create_time',title: '创建时间'},
+                {field: 'state', sort: true, templet: '#tableStateUser', title: '状态'},
+                {align: 'center', toolbar: '#tableBarUser', title: '操作', minWidth: 200}
+            ]]
+        });
+
+        // 添加
+        $('#btnAddUser').click(function () {
+            // add("添加","adminForm",['600px','600px'])
+            index.openTab({
+                title: '添加',
+                url: "{:url('/auth/adminForm')}",
+                end: function() {
+                    KT_table.reload();
+                }
+            });
+        });
+
+        $("#btnDel").click(function () {
+            var checkStatus = table.checkStatus('KT_table'),
+                data = checkStatus.data,
+                newsId = [];
+            if(data.length > 0) {
+                for (var i in data) {
+                    newsId.push(data[i].id);
+                }
+                layer.confirm('确定删除？', {icon: 3, title: '提示信息'}, function (index) {
+                    $.post("{:url('/auth/adminDels')}",{
+                        id : newsId.join(',')
+                    },function(data){
+                        KT_table.reload();
+                        layer.close(index);
+                    })
+                })
+            }else{
+                layer.msg("请选择需要删除的数据");
+            }
+        })
+        // 搜索
+        form.on('submit(formSubSearchUser)', function (data) {
+            KT_table.reload({where: data.field});
+        });
+
+        // 工具条点击事件
+        table.on('tool(KT_table)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'edit') { // 修改
+                // add('修改',"adminForm?id="+data.id,['600px','600px'])
+                index.openTab({
+                    title: '修改',
+                    url: "{:url('/auth/adminForm')}?id="+data.id,
+                    end: function() {
+                        KT_table.reload();
+                    }
+                });
+            } else if (layEvent === 'del') { // 删除
+                layer.confirm('确定要删除吗？', {
+                    skin: 'layui-layer-admin',
+                    shade: .1
+                }, function (index) {
+                    $.post("{:url('/auth/adminDel')}",{id:data.id},function (ret) {
+                        if (ret.code == 0){
+                            layer.msg(ret.msg,{icon:6,time:1500},function () {
+                                KT_table.reload();
+                            })
+                        }else{
+                            layer.msg(ret.msg,{icon:5,time:1500})
+                        }
+                    });
+                });
+            }
+        });
+
+
+        // 修改用户状态
+        form.on('switch(ckStateUser)', function (obj) {
+            let state = 2;
+            if (obj.elem.checked){
+                state = 1;
+            }
+            $.post("{:url('/auth/adminStateSave')}",{id:obj.value,state:state},function (ret) {
+                if (ret.code == 0){
+                    layer.msg(ret.msg,{icon:6,time:1500},function () {
+                        parent.layer.closeAll();
+                    })
+                }else{
+                    layer.msg(ret.msg,{icon:5,time:1500})
+                }
+            });
+        });
+
+
+    });
+</script>
+
+</body>
+</html>

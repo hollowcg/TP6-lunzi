@@ -1,0 +1,75 @@
+{include file="base/_meta" /}
+</head>
+<body>
+<form id="modelAuthForm" lay-filter="modelAuthForm" class="layui-form model-form layui-form-pane" style="padding: 20px;">
+    <input name="id" type="hidden" value="{$data.id}"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">上级菜单</label>
+        <div class="layui-input-block">
+            <select name="pid" lay-search>
+                <option value="0">顶级菜单</option>
+                {notempty name="menu"}
+                {volist name="menu" id="vo_menu"}
+                <option value="{$vo_menu.id}" {eq name="$vo_menu.id" value="$pid"}selected{/eq} >{:str_repeat('|—',$vo_menu.level)}{$vo_menu.name}</option>
+                {/volist}
+                {/notempty}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">权限名称</label>
+        <div class="layui-input-block">
+            <input name="name" placeholder="请输入权限名称" type="text" class="layui-input" maxlength="50"
+                   lay-verType="tips" lay-verify="required" required autocomplete="off" value="{$data.name}"/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单url</label>
+        <div class="layui-input-block">
+            <input name="url" placeholder="请输入菜单url" type="text" class="layui-input" autocomplete="off" value="{$data.url}"/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单图标</label>
+        <div class="layui-input-block">
+            <input name="icon" placeholder="请输入菜单图标" type="text" class="layui-input" autocomplete="off" value="{$data.icon}"/>
+            <div class="layui-form-mid layui-word-aux"><a href="http://www.fontawesome.com.cn/faicons/" target="_blank" style="color: #FF5722">fa图表库</a></div>
+
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序号</label>
+        <div class="layui-input-block">
+            <input name="sort" placeholder="请输入排序号" type="number" class="layui-input" min="0" max="1000"
+                   lay-verType="tips" lay-verify="required|number" required autocomplete="off" value="{$data.sort|default='0'}"/>
+        </div>
+    </div>
+    <div class="layui-form-item text-right">
+        <button class="layui-btn" lay-filter="*" lay-submit>保存</button>
+    </div>
+</form>
+{include file="base/_script" /}
+<script>
+    layui.use(['layer', 'form'], function () {
+        var $ = layui.jquery
+            ,layer = layui.layer
+            , form = layui.form;
+
+        form.on('submit(*)', function(data){
+            $.post("{:url('/auth/authSave')}",data.field,function (ret) {
+                if (ret.code == 0){
+                    layer.msg(ret.msg,{icon:6,time:1500},function () {
+                        parent.layer.closeAll();
+                    })
+                }else{
+                    layer.msg(ret.msg,{icon:5,time:1500})
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    })
+</script>
+</body>
+</html>

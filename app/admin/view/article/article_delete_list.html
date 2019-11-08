@@ -1,0 +1,247 @@
+﻿{include file="base/_meta" /}
+</head>
+<body>
+
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+
+                    <div class="layui-inline">
+                        <div class="layui-input-inline mr0">
+                            <input name="title" class="layui-input" type="text" placeholder="标题"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <div class="layui-input-inline mr0">
+                            <select name="article_cate_id">
+                                <option value=""></option>
+                                {volist name="cate" id="voCate"}
+                                <option value="{$voCate.id}">{:str_repeat('|—&nbsp;',$voCate.level)}&nbsp;{$voCate.name}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <div class="layui-input-inline mr0" style="width: 295px;">
+                            <input name="datetime" class="layui-input" type="text" placeholder="时间" id="datetime"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline layui-btn-group">
+                        <button class="layui-btn icon-btn" lay-filter="formSubSearchUser" lay-submit>
+                            <i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                        <button id="btnAddRestore" class="layui-btn icon-btn">恢复</button>
+                        <button id="btnDel" class="layui-btn icon-btn">删除</button>
+                    </div>
+                </div>
+            </div>
+
+            <table class="layui-table" id="KT_table" lay-filter="KT_table"></table>
+        </div>
+    </div>
+</div>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="tableBarUser">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="restore">恢复</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<!-- 表格状态列 -->
+<script type="text/html" id="tableStateTop">
+    <input type="checkbox" lay-filter="ckStateTop" value="{{d.id}}" lay-skin="switch"
+           lay-text="置顶|不置顶" {{d.is_top==1?'checked':''}}/>
+</script>
+
+<script type="text/html" id="tableStateShow">
+    <input type="checkbox" lay-filter="ckStateShow" value="{{d.id}}" lay-skin="switch"
+           lay-text="显示|隐藏" {{d.is_show=='yes'?'checked':''}}/>
+</script>
+
+<!-- js部分 -->
+{include file="base/_script" /}
+<script>
+    layui.use(['layer', 'form', 'table', 'util', 'admin','index','laydate'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+        var admin = layui.admin
+            ,index = layui.index
+            ,laydate = layui.laydate;
+
+        // 时间渲染
+        laydate.render({
+            elem:"#datetime",
+            type:"datetime",
+            range:"~",
+        })
+
+        // 渲染表格
+        var KT_table = table.render({
+            elem: '#KT_table',
+            url: "{:url('/article/articleList',['is_delete'=>1])}",
+            page: true,
+            limit:20,
+            limits:[20,50,100,200],
+            cellMinWidth: 100,
+            autoSort:false,
+            cols: [[
+                {type: 'checkbox', fixed: 'left'},
+                {field: 'id', title: 'ID',sort: true},
+                {field: 'title', title: '名称'},
+                {field: 'article_cate_id', title: '所属栏目',sort: true,templet:function (d) {
+                        return d.cateName;
+                    }},
+                {field: 'create_time', title: '添加时间',sort: true,width:180},
+                {field: 'sort', title: '排序',sort: true},
+                {field: 'is_top', title: '置顶', templet: '#tableStateTop',sort: true},
+                {field: 'is_show',title: '显示', templet: '#tableStateShow',sort: true},
+                {align: 'center', toolbar: '#tableBarUser', title: '操作', minWidth: 200}
+            ]]
+        });
+
+        // 添加
+        $('#btnAddRestore').click(function () {
+            var checkStatus = table.checkStatus('KT_table'),
+                data = checkStatus.data,
+                newsId = [];
+            if(data.length > 0) {
+                for (var i in data) {
+                    newsId.push(data[i].id);
+                }
+                layer.confirm('确定恢复？', {icon: 3, title: '提示信息'}, function (index) {
+                    $.post("{:url('/article/articleRestore')}",{
+                        id : newsId.join(',')
+                    },function(data){
+                        KT_table.reload();
+                        layer.close(index);
+                    })
+                })
+            }else{
+                layer.msg("请选择需要删除的数据");
+            }
+        });
+
+        $("#btnDel").click(function () {
+            var checkStatus = table.checkStatus('KT_table'),
+                data = checkStatus.data,
+                newsId = [];
+            if(data.length > 0) {
+                for (var i in data) {
+                    newsId.push(data[i].id);
+                }
+                layer.confirm('确定删除？', {icon: 3, title: '提示信息'}, function (index) {
+                    $.post("{:url('/article/articleDels')}",{
+                        id : newsId.join(','),
+                        is_delete:true
+                    },function(data){
+                        KT_table.reload();
+                        layer.close(index);
+                    })
+                })
+            }else{
+                layer.msg("请选择需要删除的数据");
+            }
+        })
+        // 搜索
+        form.on('submit(formSubSearchUser)', function (data) {
+            KT_table.reload({where: data.field});
+        });
+
+        // 工具条点击事件
+        table.on('tool(KT_table)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'restore') { // 修改
+                layer.confirm('确定要恢复吗？', {
+                    skin: 'layui-layer-admin',
+                    shade: .1
+                }, function (index) {
+                    $.post("{:url('/article/articleRestore')}",{id:data.id,is_delete:true},function (ret) {
+                        if (ret.code == 0){
+                            layer.msg(ret.msg,{icon:6,time:1500},function () {
+                                KT_table.reload();
+                            })
+                        }else{
+                            layer.msg(ret.msg,{icon:5,time:1500})
+                        }
+                    });
+                });
+            } else if (layEvent === 'del') { // 删除
+                layer.confirm('确定要删除吗？', {
+                    skin: 'layui-layer-admin',
+                    shade: .1
+                }, function (index) {
+                    $.post("{:url('/article/articleDel')}",{id:data.id,is_delete:true},function (ret) {
+                        if (ret.code == 0){
+                            layer.msg(ret.msg,{icon:6,time:1500},function () {
+                                KT_table.reload();
+                            })
+                        }else{
+                            layer.msg(ret.msg,{icon:5,time:1500})
+                        }
+                    });
+                });
+            }
+        });
+
+        // 排序
+        table.on('sort(KT_table)', function(obj){
+            table.reload('KT_table', {
+                initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+                ,where: { //请求参数（注意：这里面的参数可任意定义，并非下面固定的格式）
+                    field: obj.field //排序字段
+                    ,order: obj.type //排序方式
+                    ,type:'order'
+                },page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        });
+       // 置顶
+        form.on('switch(ckStateTop)', function (obj) {
+            let is_top = 0;
+            if (obj.elem.checked){
+                is_top = 1;
+            }
+            $.post("{:url('/article/articleStateSave')}",{id:obj.value,is_top:is_top},function (ret) {
+                if (ret.code == 0){
+                    layer.msg(ret.msg,{icon:6,time:1500},function () {
+                        parent.layer.closeAll();
+                    })
+                }else{
+                    layer.msg(ret.msg,{icon:5,time:1500})
+                }
+            });
+        });
+        // 隐藏
+        form.on('switch(ckStateShow)', function (obj) {
+            let is_show = 'no';
+            if (obj.elem.checked){
+                is_show = 'yes';
+            }
+            $.post("{:url('/article/articleStateSave')}",{id:obj.value,is_show:is_show},function (ret) {
+                if (ret.code == 0){
+                    layer.msg(ret.msg,{icon:6,time:1500},function () {
+                        parent.layer.closeAll();
+                    })
+                }else{
+                    layer.msg(ret.msg,{icon:5,time:1500})
+                }
+            });
+        });
+
+
+    });
+</script>
+
+</body>
+</html>

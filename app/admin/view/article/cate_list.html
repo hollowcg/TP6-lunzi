@@ -1,0 +1,175 @@
+{include file="base/_meta" /}
+</head>
+<body>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">搜索：</label>
+                        <div class="layui-input-inline mr0">
+                            <input id="edtSearchAuth" class="layui-input" type="text" placeholder="输入关键字"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button id="btnSearchAuth" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                        <button id="btnAddAuth" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                        <button id="btnExpandAuth" class="layui-btn icon-btn">全部展开</button>
+                    </div>
+                    <div class="layui-inline">
+                        <button id="btnFoldAuth" class="layui-btn icon-btn">全部折叠</button>
+                    </div>
+                </div>
+            </div>
+
+            <table class="layui-table" id="tableAuth" lay-filter="tableAuth"></table>
+        </div>
+    </div>
+</div>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="tableBarAuth">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="addzi">添加</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="showTemp">
+    <input type="checkbox" lay-filter="is_show" value="{{d.id}}" lay-skin="switch"
+           lay-text="显示|隐藏" {{d.is_show==1?'checked':''}}/>
+</script>
+<!-- js部分 -->
+{include file="base/_script" /}
+<script>
+    layui.use(['layer', 'form', 'table', 'admin', 'treetable'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var admin = layui.admin;
+        var treetable = layui.treetable;
+
+        // 渲染表格
+        function renderTable() {
+            treetable.render({
+                treeColIndex: 1,
+                treeSpid: 0,
+                treeIdName: 'id',
+                treePidName: 'pid',
+                elem: '#tableAuth',
+                url: "{:url('/article/cateList')}",
+                cellMinWidth: 100,
+                cols: [[
+                    {type: 'numbers', title: '#'},
+                    {field: 'name', title: '名称', minWidth: 200},
+                    {field: 'icon', title: '图标',templet:function (d) {
+                            return "<i class='"+d.icon+"'></i>"
+                        }},
+                    {field: 'sort', title: '排序号', align: 'center'},
+                    {field: 'is_show', title: '是否显示',templet:"#showTemp"},
+                    {templet: '#tableBarAuth', title: '操作', align: 'center', minWidth: 120}
+                ]]
+            });
+        }
+
+        renderTable();
+
+        // 添加按钮点击事件
+        $('#btnAddAuth').click(function () {
+            add("添加","cateForm","",function () {
+                renderTable();
+            });
+        });
+
+        // 工具条点击事件
+        table.on('tool(tableAuth)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'edit') { // 修改
+                add("修改","cateForm?id="+data.id+"&pid="+data.pid,"",function () {
+                    renderTable();
+                });
+            } else if (layEvent === 'addzi') { // 添加子菜单
+                add("添加","cateForm?pid="+data.id,"",function () {
+                    renderTable();
+                });
+            } else if (layEvent === 'del') { // 删除
+                layer.confirm('确定要删除“' + data.name + '”吗？', {
+                    skin: 'layui-layer-admin',
+                    shade: .1
+                }, function (index) {
+                    $.post("{:url('/article/cateDel')}",{id:data.id},function (ret) {
+                        if (ret.code == 0){
+                            layer.msg(ret.msg,{icon:6,time:1500},function () {
+                                renderTable();
+                            })
+                        }else{
+                            layer.msg(ret.msg,{icon:5,time:1500})
+                        }
+                    });
+                });
+            }
+        });
+
+        form.on('switch(is_show)', function (obj) {
+            let is_show = 2;
+            if (obj.elem.checked){
+                is_show = 1;
+            }
+            $.post("{:url('/article/cateSave')}",{id:obj.value,is_show:is_show},function (ret) {
+                if (ret.code == 0){
+                    layer.msg(ret.msg,{icon:6,time:1500},function () {
+                        parent.layer.closeAll();
+                    })
+                }else{
+                    layer.msg(ret.msg,{icon:5,time:1500})
+                }
+            });
+        });
+
+
+        // 搜索按钮点击事件
+        $('#btnSearchAuth').click(function () {
+            $('#edtSearchAuth').removeClass('layui-form-danger');
+            var keyword = $('#edtSearchAuth').val();
+            var $tds = $('#tableAuth').next('.treeTable').find('.layui-table-body tbody tr td');
+            $tds.css('background-color', 'transparent');
+            if (!keyword) {
+                layer.msg("请输入关键字", {icon: 5, anim: 6});
+                $('#edtSearchAuth').addClass('layui-form-danger');
+                $('#edtSearchAuth').focus();
+                return;
+            }
+            var searchCount = 0;
+            $tds.each(function () {
+                if ($(this).text().indexOf(keyword) >= 0) {
+                    $(this).css('background-color', '#FAE6A0');
+                    if (searchCount == 0) {
+                        $('body,html').stop(true);
+                        $('body,html').animate({scrollTop: $(this).offset().top - 150}, 500);
+                    }
+                    searchCount++;
+                }
+            });
+            if (searchCount == 0) {
+                layer.msg("没有匹配结果", {icon: 5, anim: 6});
+            } else {
+                treetable.expandAll('#tableAuth');
+            }
+        });
+
+        $('#btnExpandAuth').click(function () {
+            treetable.expandAll('#tableAuth');
+        });
+
+        $('#btnFoldAuth').click(function () {
+            treetable.foldAll('#tableAuth');
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+{include file="base/_meta" /}
+</head>
+<body>
+<form id="modelAuthForm" lay-filter="modelAuthForm" class="layui-form model-form">
+
+    <ul id="treeAuth" class="ztree"></ul>
+
+    <input type="hidden" name="id" value="{$id}">
+    <div class="layui-form-item text-right">
+        <button class="layui-btn" lay-filter="*" lay-submit>保存</button>
+    </div>
+</form>
+{include file="base/_script" /}
+<script>
+    layui.use(['layer', 'form','zTree'], function () {
+        var $ = layui.jquery
+            ,layer = layui.layer
+            , form = layui.form;
+
+
+        $.post("{:url('/auth/adminRolePowerZtree',['id'=>$id])}", function (res) {
+            var setting = {check: {enable: true}, data: {simpleData: {enable: true}}};
+            $.fn.zTree.init($('#treeAuth'), setting, res);
+        });
+
+        form.on('submit(*)', function(data){
+            var treeObj = $.fn.zTree.getZTreeObj('treeAuth');
+            var nodes = treeObj.getCheckedNodes(true);
+            var ids = new Array();
+            for (var i = 0; i < nodes.length; i++) {
+                ids[i] = nodes[i].id;
+            }
+
+            data.field.menu_id = ids.join(',')
+
+            $.post("{:url('/auth/adminRolePowerSave')}",data.field,function (ret) {
+                if (ret.code == 0){
+                    layer.msg(ret.msg,{icon:6,time:1500},function () {
+                        parent.layer.closeAll();
+                        parent.layui.table.reload("KT_table",{page:{curr:1}});
+                    })
+                }else{
+                    layer.msg(ret.msg,{icon:5,time:1500})
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    })
+</script>
+</body>
+</html>

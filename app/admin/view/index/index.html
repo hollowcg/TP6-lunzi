@@ -1,0 +1,115 @@
+{include file="base/_meta" /}
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!-- 头部 -->
+    <div class="layui-header">
+        <div class="layui-logo">
+            <img src="/static/admin/easyWeb/images/logo.png"/>
+            <cite>&nbsp;管理系统</cite>
+        </div>
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item" lay-unselect>
+                <a ew-event="flexible" title="侧边伸缩"><i class="layui-icon layui-icon-shrink-right"></i></a>
+            </li>
+            <li class="layui-nav-item" lay-unselect>
+                <a ew-event="refresh" title="刷新"><i class="layui-icon layui-icon-refresh-3"></i></a>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item" lay-unselect>
+                <a ew-event="note" title="便签"><i class="layui-icon layui-icon-note"></i></a>
+            </li>
+            <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                <a ew-event="fullScreen" title="全屏"><i class="layui-icon layui-icon-screen-full"></i></a>
+            </li>
+            <li class="layui-nav-item" lay-unselect>
+                <a>
+                    <img src="{$adminInfo.headimg}" class="layui-nav-img">
+                    <cite>{$adminInfo.nickname}</cite>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd lay-unselect>
+                        <a ew-href="{:url('/auth/adminForm',['id'=>$adminInfo.id,'soruce'=>'index'])}">个人中心</a>
+                    </dd>
+                    <hr>
+                    <dd lay-unselect>
+                        <a ew-event="logout" id="logout">退出</a>
+                    </dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item" lay-unselect>
+                <a ew-event="theme" title="主题"><i class="layui-icon layui-icon-more-vertical"></i></a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 侧边栏 -->
+    <div class="layui-side">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree" lay-filter="admin-side-nav" lay-accordion="true"
+                style="margin: 15px 0;">
+                {notempty name="menus"}
+                    {volist name="menus" id="vo"}
+                        <li class="layui-nav-item">
+                            <a><i class="{$vo.icon}"></i>&emsp;<cite>{$vo.name}</cite></a>
+                             {notempty name="vo.children"}
+                            <dl class="layui-nav-child">
+                                {volist name="vo.children" id="voo"}
+                                <dd>
+                                    <a lay-href="{$voo.url}">{$voo.name}</a>
+                                    {notempty name="voo.children"}
+                                    <dl class="layui-nav-child">
+                                        {volist name="voo.children" id="vooo"}
+                                        <dd><a lay-href="{$vooo.url}">{$vooo.name}</a></dd>
+                                        {/volist}
+                                    </dl>
+                                    {/notempty}
+                                </dd>
+                                {/volist}
+                            </dl>
+                             {/notempty}
+
+                        </li>
+                    {/volist}
+                {/notempty}
+            </ul>
+        </div>
+    </div>
+
+    <!-- 主体部分 -->
+    <div class="layui-body"></div>
+    <!-- 底部 -->
+    <div class="layui-footer">
+        copyright © {:date('Y')} 管理系统. <span class="pull-right">By：<a href="tencent://message/?uin=461718846&Site=&Menu-=yes" target="_blank">晨光</a> </span>
+    </div>
+</div>
+
+
+<!-- js部分 -->
+{include file="base/_script" /}
+<script>
+    layui.use(['index'], function () {
+        var $ = layui.jquery;
+        var index = layui.index;
+
+        // 默认加载主页
+        index.loadHome({
+            menuPath: "/admin/index/welcome",
+            menuName: '<i class="layui-icon layui-icon-home"></i>'
+        });
+
+        // 退出
+        $("#logout").click(function () {
+            // 清除tab记忆
+            index.clearTabCache();
+            // 退出
+            window.location.href = "{:url('/login/logout')}";
+        })
+
+        // 切换Tab自动刷新
+        // $('.layui-body>.layui-tab[lay-filter="admin-pagetabs"]').attr('lay-autoRefresh', 'true');
+    });
+</script>
+</body>
+</html>

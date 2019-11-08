@@ -1,0 +1,153 @@
+{include file="base/_meta" /}
+</head>
+<body>
+<form id="modelAuthForm" lay-filter="modelAuthForm" class="layui-form model-form layui-form-pane" style="padding: 20px;">
+    <input name="id" type="hidden" value="{$data.id}"/>
+
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs4">
+
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding: 25px;">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">头像</label>
+                        <div class="layui-input-block">
+                            <div class="layui-upload-drag" id="img_thumb">
+                                {notempty name="$data.headimg"}
+                                <img src="{$data.headimg}" alt="{$data.username}" width="100%">
+                                {else /}
+                                <i class="layui-icon"></i>
+                                <p>直接上传，或将文件拖拽到此处,此处无需裁剪</p>
+                                {/notempty}
+
+                            </div>
+                        </div>
+                        <label for="" class="layui-form-label" style="padding: 0;margin-top: 5px;">
+                            <button type="button" class="layui-btn" id="uploadImgThumb" style="width: 100%;">裁剪上传</button>
+                        </label>
+                        <div class="layui-input-block" style="margin-top: 5px;">
+                            <input type="text" name="headimg" value="{$data.headimg}" id="img_thumb_input" class="layui-input" placeholder="手动上传或输入网址">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="layui-col-xs8">
+
+            <div class="layui-card">
+                <div class="layui-card-body">
+
+                    {eq name="admin_role_id" value="1"}
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">角色</label>
+                        <div class="layui-input-block">
+                            <select name="admin_role_id" lay-verify="required">
+                                {notempty name="role"}
+                                {volist name="role" id="voRole"}
+                                <option value="{$voRole.id}">{$voRole.name}</option>
+                                {/volist}
+                                {/notempty}
+                            </select>
+                        </div>
+                    </div>
+                    {/eq}
+
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户名</label>
+                        <div class="layui-input-block">
+                            <input name="username" placeholder="请输入" type="text" class="layui-input"
+                                   lay-verType="tips" lay-verify="required" required autocomplete="off" value="{$data.username}"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">密码</label>
+                        <div class="layui-input-block">
+                            <input name="password" placeholder="请输入" type="text" class="layui-input"
+                                   lay-verType="tips" lay-verify="required" required autocomplete="off" value="{$data.password}"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">昵称</label>
+                        <div class="layui-input-block">
+                            <input name="nickname" placeholder="请输入" type="text" class="layui-input"
+                                   autocomplete="off" value="{$data.nickname}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div class="layui-form-item text-right">
+        <button class="layui-btn" lay-filter="*" lay-submit>保存</button>
+    </div>
+</form>
+{include file="base/_script" /}
+<script>
+    layui.use(['layer', 'form','upload','admin'], function () {
+        var $ = layui.jquery
+            ,layer = layui.layer
+            , form = layui.form
+            , upload = layui.upload
+            ,admin = layui.admin;
+
+        form.on('submit(*)', function(data){
+            $.post("{:url('/auth/adminSave')}",data.field,function (ret) {
+                if (ret.code == 0){
+                    layer.msg(ret.msg,{icon:6,time:1500},function () {
+                        // parent.layer.closeAll();
+                        // parent.layui.table.reload("KT_table",{page:{curr:1}});
+                        admin.closeThisTabs()
+                    })
+                }else{
+                    layer.msg(ret.msg,{icon:5,time:1500})
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        // 缩略图
+        upload.render({
+            elem: '#img_thumb' //绑定元素
+            ,url: "{:url('/system/uploads')}" //上传接口
+            ,done: function(res){
+                console.log(res)
+                //上传完毕回调
+                if (res.code == 0){
+                    $("#img_thumb").html("<img src='"+res.data.src+"' width='100%'>")
+                    $("#img_thumb_input").val(res.data.src)
+                } else{
+                    layer.msg(res.msg,{icon:5,time:1500})
+                }
+            }
+        });
+        $("#img_thumb_input").bind("input propertychange",function(event){
+            $("#img_thumb").html("<img src='"+$("#img_thumb_input").val()+"' width='100%'>")
+        })
+
+        // 图片裁剪
+        $("#uploadImgThumb").click(function () {
+            admin.cropImg({
+                aspectRatio: 1/1,
+                imgSrc: $("#img_thumb_input").val(),
+                onCrop: function (res) {
+                    $("#img_thumb_input").val(res)
+                    $("#img_thumb").html("<img src='"+$("#img_thumb_input").val()+"' width='100%'>")
+                    // 返回的res是base64编码的裁剪后的图片
+                    // layer.msg('<img src="' + res + '" width="220px" height="220px"/>');
+                }
+            });
+        })
+    })
+</script>
+</body>
+</html>
