@@ -14,10 +14,7 @@ class Admin extends Base
 {
     public static function checkLogin($data){
         try{
-            $admin = self::where('username',$data['username'])->find();
-            trace($admin['password'],'notice');
-            trace(encry_code('4356vpt38gMjfbNqUxqKU0vKEjStPtbaUZpATc6-vog','DECODE'),'notice');
-            trace(123123,'notice');
+            $admin = self::where('username',trim($data['username']))->find();
             if (!empty($admin)){
                 if ($data['password'] == encry_code($admin['password'],'DECODE')){
                     Session::set('admin',$admin->toArray());
