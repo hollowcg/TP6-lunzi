@@ -1,0 +1,49 @@
+{include file="base/_meta" /}
+</head>
+<body>
+<form id="modelAuthForm" lay-filter="modelAuthForm" class="layui-form model-form layui-form-pane" style="padding: 20px;">
+    <input name="id" type="hidden" value="{$data.id}"/>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-block">
+            <input name="name" placeholder="请输入" type="text" class="layui-input"
+                   lay-verType="tips" lay-verify="required" required autocomplete="off" value="{$data.name}"/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <textarea name="remark" placeholder="请输入内容" class="layui-textarea">{$data.remark}</textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item text-right">
+        <button class="layui-btn" lay-filter="*" lay-submit>保存</button>
+    </div>
+</form>
+{include file="base/_script" /}
+<script>
+    layui.use(['layer', 'form'], function () {
+        var $ = layui.jquery
+            ,layer = layui.layer
+            , form = layui.form;
+
+        form.on('submit(*)', function(data){
+            $.post("{:url('/carousel/cateSave')}",data.field,function (ret) {
+                if (ret.code == 0){
+                    layer.msg(ret.msg,{icon:6,time:1500},function () {
+                        parent.layer.closeAll();
+                        parent.layui.table.reload("KT_table",{page:{curr:1}});
+                    })
+                }else{
+                    layer.msg(ret.msg,{icon:5,time:1500})
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    })
+</script>
+</body>
+</html>

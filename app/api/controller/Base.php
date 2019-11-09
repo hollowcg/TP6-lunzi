@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 declare (strict_types = 1);
 
-namespace app\admin\controller;
+namespace app\api\controller;
 
 use Qiniu\Storage\UploadManager;
 use think\App;
@@ -52,7 +52,7 @@ abstract class Base
      * @var array
      */
     protected $middleware = [
-        'app\admin\middleware\Admin',
+        'app\api\middleware\Admin',
     ];
 
     /**
@@ -71,16 +71,7 @@ abstract class Base
 
     // 初始化
     protected function initialize(){
-//        后台菜单
-        $menus = \app\admin\model\Base::getMenus();
 
-//        后台登陆用户信息
-        $adminInfo = \think\facade\Db::name('admin')->find(Session::get('admin.id'));
-
-        View::assign([
-            'menus'=>$menus,
-            'adminInfo'=>$adminInfo,
-        ]);
     }
 
     /**
