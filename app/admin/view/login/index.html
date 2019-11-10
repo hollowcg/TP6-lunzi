@@ -65,7 +65,7 @@
 				$.post("{:url('/login/index')}",data.field,function (ret) {
 					if(ret.code == 0){
 						layer.msg(ret.msg,{time:1500,icon:6},function () {
-							location.href = "{$domain}/admin.php/index";
+							parent.location.href = "{$domain}/admin.php/index";
 						});
 
 					}else{

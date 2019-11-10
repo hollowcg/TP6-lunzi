@@ -92,11 +92,6 @@
     layui.use(['index'], function () {
         var $ = layui.jquery;
         var index = layui.index
-            ,$loginout = "{$loginout}";
-
-        if ($loginout){
-            parent.window.location = "{:url('/Login/index')}"
-        }
 
         // 默认加载主页
         index.loadHome({

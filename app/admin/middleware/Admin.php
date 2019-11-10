@@ -20,9 +20,7 @@ class Admin
 
 //        判断是否有session记录，如果没有输出数据，前台跳转
         if (empty($admin_id)) {
-            View::assign('loginout',true);
-        }else{
-            View::assign('loginout',false);
+            return redirect((string) url('/login/index'));
         }
 
 
