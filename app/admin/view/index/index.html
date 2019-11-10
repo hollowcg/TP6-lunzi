@@ -6,7 +6,7 @@
     <div class="layui-header">
         <div class="layui-logo">
             <img src="/static/admin/easyWeb/images/logo.png"/>
-            <cite>&nbsp;管理系统</cite>
+            <cite>&nbsp;{Kitty:system field="title"}</cite>
         </div>
         <ul class="layui-nav layui-layout-left">
             <li class="layui-nav-item" lay-unselect>
@@ -91,7 +91,12 @@
 <script>
     layui.use(['index'], function () {
         var $ = layui.jquery;
-        var index = layui.index;
+        var index = layui.index
+            ,$loginout = "{$loginout}";
+
+        if ($loginout){
+            parent.window.location = "{:url('/Login/index')}"
+        }
 
         // 默认加载主页
         index.loadHome({

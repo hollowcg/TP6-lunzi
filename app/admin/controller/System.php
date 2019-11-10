@@ -12,6 +12,7 @@ use Qiniu\Config;
 use Qiniu\Storage\BucketManager;
 use think\Exception;
 use think\exception\ValidateException;
+use think\facade\Cache;
 use think\facade\Db;
 use think\facade\Request;
 
@@ -41,6 +42,9 @@ class System extends Base
                 $system->value = $v['value'];
                 $system->save();
             }
+
+//            删除缓存
+            deleteDir(app()->getRuntimePath().'/temp');
 
             return $this->result(0,'保存成功');
 

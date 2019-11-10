@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50725
 File Encoding         : 65001
 
-Date: 2019-11-09 12:36:50
+Date: 2019-11-10 12:14:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -81,7 +81,7 @@ CREATE TABLE `kt_article` (
   `keywords` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'seo关键词',
   `delete_time` datetime DEFAULT '0000-01-01 00:00:00' COMMENT '删除时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COMMENT='文章表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文章表';
 
 -- ----------------------------
 -- Records of kt_article
@@ -102,7 +102,7 @@ CREATE TABLE `kt_article_cate` (
   `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '图标',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COMMENT='文章栏目表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文章栏目表';
 
 -- ----------------------------
 -- Records of kt_article_cate
@@ -152,7 +152,7 @@ CREATE TABLE `kt_auth_rule` (
 -- Records of kt_auth_rule
 -- ----------------------------
 INSERT INTO `kt_auth_rule` VALUES ('1', '系统设置', '0', 'System', 'layui-icon layui-icon-set', '1', '1', '1', null, null);
-INSERT INTO `kt_auth_rule` VALUES ('2', '系统设置', '1', 'System/system', '', '0', '2', '1', null, '2019-11-08 11:09:40');
+INSERT INTO `kt_auth_rule` VALUES ('2', '系统设置', '1', 'System/system', '', '0', '2', '1', null, '2019-11-09 14:13:21');
 INSERT INTO `kt_auth_rule` VALUES ('3', '权限管理', '0', 'Auth', 'fa fa-group', '2', '1', '1', null, null);
 INSERT INTO `kt_auth_rule` VALUES ('4', '管理员管理', '3', 'Auth/adminList', '', '0', '2', '1', null, null);
 INSERT INTO `kt_auth_rule` VALUES ('5', '角色管理', '3', 'Auth/adminRoleList', '', '0', '2', '1', null, null);
@@ -269,7 +269,7 @@ CREATE TABLE `kt_system` (
 -- ----------------------------
 -- Records of kt_system
 -- ----------------------------
-INSERT INTO `kt_system` VALUES ('4', 'title', '123', '2019-07-27 12:40:07', '2019-07-27 12:40:07');
+INSERT INTO `kt_system` VALUES ('4', 'title', '管理系统', '2019-07-27 12:40:07', '2019-11-09 14:17:47');
 INSERT INTO `kt_system` VALUES ('5', 'title1', '', '2019-07-27 12:41:05', '2019-07-27 12:41:06');
 INSERT INTO `kt_system` VALUES ('6', 'qiniuyun_ak', 'VCAwo8-brMWmybQxnm7Kwl40HeErxjoOIZ12ukNf', '2019-07-27 13:45:55', '2019-07-27 13:45:55');
 INSERT INTO `kt_system` VALUES ('7', 'qiniuyun_sk', '4Uy__NlgWgAXx_sCFm1udOUdgMPeRftGvRgTC0Sn', '2019-07-27 13:45:55', '2019-07-27 13:45:55');
