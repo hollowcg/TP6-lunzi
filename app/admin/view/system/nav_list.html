@@ -60,7 +60,7 @@
                 treeIdName: 'id',
                 treePidName: 'pid',
                 elem: '#tableAuth',
-                url: "{:url('/system/navList')}",
+                url: "{:url('/system/navList',['nav_cate_id'=>$nav_cate_id])}",
                 cellMinWidth: 100,
                 cols: [[
                     {type: 'numbers', title: '#'},
@@ -80,7 +80,7 @@
 
         // 添加按钮点击事件
         $('#btnAddAuth').click(function () {
-            add("添加","navForm",["600px","600px"],function () {
+            add("添加","navForm?nav_cate_id={$nav_cate_id}",["600px","600px"],function () {
                 renderTable();
             });
         });
@@ -90,11 +90,11 @@
             var data = obj.data;
             var layEvent = obj.event;
             if (layEvent === 'edit') { // 修改
-                add("修改","navForm?id="+data.id+"&pid="+data.pid,["600px","600px"],function () {
+                add("修改","navForm?id="+data.id+"&pid="+data.pid+"&nav_cate_id={$nav_cate_id}",["600px","600px"],function () {
                     renderTable();
                 });
             } else if (layEvent === 'addzi') { // 添加子菜单
-                add("添加","navForm?pid="+data.id,["600px","600px"],function () {
+                add("添加","navForm?pid="+data.id+"&nav_cate_id={$nav_cate_id}",["600px","600px"],function () {
                     renderTable();
                 });
             } else if (layEvent === 'del') { // 删除

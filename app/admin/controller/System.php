@@ -179,17 +179,28 @@ class System extends Base
 
     #前台导航  START
     public function navList(){
+        $nav_cate_id = input('nav_cate_id');
         if (Request::isAjax()){
             $param = input();
-            $data = Db::name('nav')->order('sort asc,id asc')->select();
+
+            $where = [];
+
+            if (!empty($param['nav_cate_id'])){
+                $where[] = ['nav_cate_id','=',$param['nav_cate_id']];
+            }
+
+            $data = Db::name('nav')->where($where)->order('sort asc,id asc')->select();
             $data = tree($data);
             return $this->resultTable($data,count($data));
         }
-        return view('nav_list');
+        return view('nav_list',[
+            'nav_cate_id'=>$nav_cate_id,
+        ]);
     }
     public function navForm(){
         $id = input('id');
         $pid = input('pid');
+        $nav_cate_id = input('nav_cate_id');
 
 //        菜单
         $menus = Db::name('nav')->select();
@@ -201,6 +212,7 @@ class System extends Base
         return view('nav_form',[
             'menu'=>tree($menus),
             'pid'=>$pid,
+            'nav_cate_id'=>$nav_cate_id,
             'data'=>$data,
             'articleCate'=>tree($articleCate),
         ]);
