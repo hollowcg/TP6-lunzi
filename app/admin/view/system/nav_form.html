@@ -36,6 +36,7 @@
         </div>
         <div class="layui-input-inline">
             <select name="article_cate_id" lay-search>
+                <option value="">对应分类</option>
                 {notempty name="articleCate"}
                 {volist name="articleCate" id="vo_articleCate"}
                 <option value="{$vo_articleCate.id}" {eq name="$vo_articleCate.id" value="$data.article_cate_id"}selected{/eq} >{:str_repeat('|—',$vo_articleCate.level)}{$vo_articleCate.name}</option>
