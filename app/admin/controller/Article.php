@@ -8,6 +8,7 @@
 namespace app\admin\controller;
 
 
+use app\admin\model\Admin;
 use app\common\model\ArticleCate;
 use app\common\model\ArticleTags;
 use think\exception\ValidateException;
@@ -40,6 +41,8 @@ class Article extends Base
         $menus = Db::name('ArticleCate')->select();
 //        数据
         $data = Db::name('ArticleCate')->find($id);
+
+
 
         return view('cate_form',[
             'menu'=>tree($menus),
@@ -149,10 +152,13 @@ class Article extends Base
 //        标签内容
         $tags = implode(',',Db::name('articleTags')->where('id','in',$data['tags'])->column('name'));
 
+        $admin = Admin::find(session('admin.id'));
+
         return view('article_form',[
             'data'=>$data,
             'cate'=>tree($cate),
             'tags'=>$tags,
+            'admin'=>$admin,
         ]);
     }
 //    文章保存

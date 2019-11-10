@@ -23,7 +23,7 @@
                         <div class="layui-input-block">
                             <input name="arthur" placeholder="请输入" type="text" class="layui-input"
                                    lay-verType="tips" autocomplete="off"
-                                   value="{$data.arthur}"/>
+                                   value="{$data.arthur|default=$admin.nickname}"/>
                         </div>
                     </div>
 
