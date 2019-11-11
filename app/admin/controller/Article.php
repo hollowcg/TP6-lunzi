@@ -94,37 +94,7 @@ class Article extends Base
     public function articleList(){
         if (Request::isAjax()){
             $param = input();
-
-            $where = [];
-//            标题
-            if (!empty($param['title'])){
-                $where[] = ['a.title','like','%'.$param['title'].'%'];
-            }
-
-//            分类
-            if (!empty($param['article_cate_id'])){
-                $where[] = ['a.article_cate_id',$param['article_cate_id']];
-            }
-
-//            时间
-            if (!empty($param['datetime'])){
-                $time = explode(' ~ ',$param['datetime']);
-                $where[] = ['a.create_time','between time',$time];
-            }
-
-//            排序
-            if (!empty($param['type']) && $param['type'] == 'order' && !empty($param['order'])){
-                $field = input('field');
-                $order = input('order');
-                $orderArr[$field] = $order;
-            }else{
-                $orderArr['is_top'] = "desc";
-                $orderArr['is_show'] = "desc";
-                $orderArr['sort'] = "desc";
-                $orderArr['id'] = "desc";
-            }
-
-            $data = \app\common\model\Article::getList($where,$orderArr,$param['limit'],isset($param['is_delete'])?$param['is_delete']:'');
+            $data = \app\common\model\Article::getList($param,isset($param['is_delete'])?$param['is_delete']:'');
 
             return $this->resultTable($data->toArray()['data'],$data->total());
         }
