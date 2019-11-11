@@ -191,7 +191,9 @@
         laydate.render({
             elem:"#create_time",
             type:"datetime",
-            value:"{:date('Y-m-d H:i:s')}"
+            {empty name="$data.create_time"}
+                value:"{:date('Y-m-d H:i:s')}"
+            {/empty}
         })
 
         form.on('submit(*)', function (data) {
