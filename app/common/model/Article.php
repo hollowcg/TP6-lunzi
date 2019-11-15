@@ -37,12 +37,16 @@ class Article extends Base
         $limit = empty($param['limit'])?10:$param['limit'];
 //            标题
         if (!empty($param['title'])){
-            $where[] = ['a.title','like','%'.$param['title'].'%'];
+            $where[] = ['title','like','%'.$param['title'].'%'];
+        }
+
+        if (!empty($param['keywords'])){
+            $where[] = ['title|desc|content','like','%'.$param['keywords'].'%'];
         }
 
 //            分类
         if (!empty($param['article_cate_id'])){
-            $where[] = ['a.article_cate_id',$param['article_cate_id']];
+            $where[] = ['article_cate_id','=',$param['article_cate_id']];
         }
 
 //            时间
@@ -80,8 +84,6 @@ class Article extends Base
             if ($v->ArticleCate){
                 $v['cateName'] = $v->ArticleCate->getData('name');
             }
-
-            $v['tags_data'] = ArticleTags::where('id','in',$v['tags'])->select();
 
             $data[$k] = $v;
         }

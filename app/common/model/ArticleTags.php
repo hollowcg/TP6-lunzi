@@ -10,5 +10,10 @@ namespace app\common\model;
 
 class ArticleTags extends Base
 {
-
+    public static function getList(){
+        $data = self::where([
+            ['num','>',0]
+        ])->select();
+        return $data;
+    }
 }
