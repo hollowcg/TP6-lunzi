@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50725
 File Encoding         : 65001
 
-Date: 2019-11-10 12:14:21
+Date: 2019-12-02 10:31:11
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -113,22 +113,18 @@ CREATE TABLE `kt_article_cate` (
 -- ----------------------------
 DROP TABLE IF EXISTS `kt_article_tags`;
 CREATE TABLE `kt_article_tags` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `create_time` datetime DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `num` int(11) DEFAULT '0' COMMENT '文章数量',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='文章标签';
+  `article_id` int(11) DEFAULT NULL,
+  `tags_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文章标签';
 
 -- ----------------------------
 -- Records of kt_article_tags
 -- ----------------------------
-INSERT INTO `kt_article_tags` VALUES ('1', '天地', '2019-08-15 20:44:28', '2019-08-15 20:44:28', '10');
-INSERT INTO `kt_article_tags` VALUES ('2', '无极', '2019-08-15 20:44:28', '2019-08-15 20:44:28', '1');
-INSERT INTO `kt_article_tags` VALUES ('3', '123', '2019-08-15 12:21:39', '2019-08-15 12:21:39', '0');
-INSERT INTO `kt_article_tags` VALUES ('4', '测试', '2019-08-15 20:44:28', '2019-08-15 20:44:28', '9');
-INSERT INTO `kt_article_tags` VALUES ('5', '测试2', '2019-08-15 20:45:18', '2019-08-15 20:45:18', '1');
+INSERT INTO `kt_article_tags` VALUES (null, null);
+INSERT INTO `kt_article_tags` VALUES (null, null);
+INSERT INTO `kt_article_tags` VALUES (null, null);
+INSERT INTO `kt_article_tags` VALUES (null, null);
+INSERT INTO `kt_article_tags` VALUES (null, null);
 
 -- ----------------------------
 -- Table structure for kt_auth_rule
@@ -278,3 +274,20 @@ INSERT INTO `kt_system` VALUES ('9', 'logo', 'http://lichenguang.qiniuyun.changt
 INSERT INTO `kt_system` VALUES ('10', 'file', '', '2019-07-27 14:15:15', '2019-07-27 14:15:15');
 INSERT INTO `kt_system` VALUES ('11', 'qiniuyun_domain', 'http://lichenguang.qiniuyun.changtuchacha.com', '2019-07-27 14:15:15', '2019-07-27 14:15:15');
 INSERT INTO `kt_system` VALUES ('12', 'upload_type', 'localhost', '2019-08-15 12:07:48', '2019-08-15 12:07:48');
+
+-- ----------------------------
+-- Table structure for kt_tags
+-- ----------------------------
+DROP TABLE IF EXISTS `kt_tags`;
+CREATE TABLE `kt_tags` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `num` int(11) DEFAULT '0' COMMENT '文章数量',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='标签表';
+
+-- ----------------------------
+-- Records of kt_tags
+-- ----------------------------
