@@ -10,5 +10,10 @@ namespace app\admin\controller;
 
 class Index extends Base
 {
-
+    public function tpltheme(){
+        return view('tpl-theme');
+    }
+    public function tplnote(){
+        return view('tpl-note');
+    }
 }

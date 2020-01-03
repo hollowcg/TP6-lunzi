@@ -1,5 +1,410 @@
-﻿/**
+/**
  * 打印模块
  * date:2019-04-23   License By http://easyweb.vip
  */
-layui.define(["jquery"],function(a){var d=layui.jquery;var e="hide-print";var c="printing";var b={print:function(h){window.focus();if(!h){h={}}var j=h.hide;var g=h.horizontal;var m=h.iePreview;var o=h.close;var i=h.blank;if(m==undefined){m=true}if(i==undefined&&window!=top&&m&&b.isIE()){i=true}if(o==undefined){o=true;if(m&&i&&b.isIE()){o=false}}d("#page-print-set").remove();var f='<div id="page-print-set">';f+='      <style type="text/css" media="print">';if(g){f+="     @page { size: landscape; }"}else{f+="     @page { size: portrait; }"}f+="      </style>";if(m&&b.isIE()){f+='  <object id="WebBrowser" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" width="0" height="0"></object>';f+="  <script>WebBrowser.ExecWB(7, 1);";if(o){f+="  window.close();"}f+="  <\/script>"}f+="   </div>";b.hideElem(j);var k,n;if(i){k=window.open("","_blank");n=k.document;k.focus();var l=document.getElementsByTagName("html")[0].innerHTML;l+=f;n.open();n.write(l);n.close();k.onload=function(){(m&&b.isIE())||k.print();if(i&&o&&(!(m&&b.isIE()))){k.close()}b.showElem(j)}}else{k=window;d("body").append(f);(m&&b.isIE())||k.print();b.showElem(j)}},printHtml:function(h){if(!h){h={}}var j=h.html;var i=h.blank;var f=h.print;var o=h.close;var g=h.horizontal;var l=h.iePreview;if(f==undefined){f=true}if(l==undefined){l=true}if(b.isIE()&&i==undefined){i=true}if(o==undefined){o=true;if(l&&i&&b.isIE()){o=false}}var k,n;if(i){k=window.open("","_blank");n=k.document}else{var m=document.getElementById("printFrame");if(!m){d("body").append('<iframe id="printFrame" style="display: none;"></iframe>');m=document.getElementById("printFrame")}k=m.contentWindow;n=m.contentDocument||m.contentWindow.document}k.focus();if(j){j+=("<style>"+b.getCommonCss(true)+"</style>");j+='<style type="text/css" media="print">';if(g){j+="@page { size: landscape; }"}else{j+="@page { size: portrait; }"}j+="</style>";if(l&&b.isIE()){j+='<object id="WebBrowser" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" width="0" height="0"></object>';j+="<script>WebBrowser.ExecWB(7, 1);";if(o){j+="window.close();"}j+="<\/script>"}n.open();n.write(j);n.close()}if(f){k.onload=function(){(l&&b.isIE())||k.print();if(i&&o&&(!(l&&b.isIE()))){k.close()}}}return k},printPage:function(k){if(!k){k={}}var r=k.htmls;var h=k.style;var j=k.horizontal;var p=k.padding;var m=k.blank;var f=k.print;var t=k.close;var v=k.debug;var o=k.iePreview;if(f==undefined){f=true}if(o==undefined){o=true}if(b.isIE()&&m==undefined){m=true}if(t==undefined){t=true;if(o&&m&&b.isIE()){t=false}}if(b.isEdge()||b.isFirefox()){p=undefined}var n,s;if(m){n=window.open("","_blank");s=n.document}else{var q=document.getElementById("printFrame");if(!q){d("body").append('<iframe id="printFrame" style="display: none;"></iframe>');q=document.getElementById("printFrame")}n=q.contentWindow;s=q.contentDocument||q.contentWindow.document}n.focus();var g='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>打印窗口</title>';h&&(g+=h);g+="<style>";g+="body {";g+="    margin: 0 !important;";g+="} ";g+=".print-page .print-page-item {";g+="    width: 793px !important;";g+="    height: 1122px !important;";g+="    padding: "+(p?p:"55px")+" !important;";g+="    box-sizing: border-box !important;";g+="    overflow: hidden !important;";g+="    border: none !important;";g+="} ";g+=".print-page.page-horizontal .print-page-item {";g+="    width: 1122px !important;";g+="    height: 792px !important;";g+="} ";g+=".print-page.page-debug .print-page-item {";g+="    border: 1px solid red !important;";g+="} ";g+=".print-page.padding-default .print-page-item {";g+="    width: 713px !important;";g+="    height: 1042px !important;";g+="    padding: 0 !important;";g+="} ";g+=".print-page.padding-default.page-horizontal .print-page-item {";g+="    width: 1042px !important;";g+="    height: 712px !important;";g+="} ";g+=".print-page.padding-default.page-ie .print-page-item {";g+="    width: 645px !important;";g+="    height: 977px !important;";g+="} ";g+=".print-page.padding-default.page-ie.page-horizontal .print-page-item {";g+="    width: 978px !important;";g+="    height: 648px !important;";g+="} ";g+=".print-page.padding-default.page-firefox .print-page-item {";g+="    width: 720px !important;";g+="    height: 955px !important;";g+="} ";g+=".print-page.padding-default.page-firefox.page-horizontal .print-page-item {";g+="    width: 955px !important;";g+="    height: 720px !important;";g+="} ";g+=b.getCommonCss(true);g+="</style>";g+='<style type="text/css" media="print">';if(j){g+="@page { size: landscape; }"}else{g+="@page { size: portrait; }"}g+="</style>";g+="</head><body>";if(r&&(r instanceof Array)){var u=j?" page-horizontal":"";u+=p==undefined?" padding-default":"";u+=v?" page-debug":"";if(b.isIE()||b.isEdge()){u+=" page-ie"}else{if(b.isFirefox()){u+=" page-firefox"}}g+='<div class="print-page'+u+'">';for(var l=0;l<r.length;l++){g+='<div class="print-page-item">';g+=r[l];g+="</div>"}g+="</div>"}if(o&&b.isIE()){g+='<object id="WebBrowser" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" width="0" height="0"></object>';g+="<script>WebBrowser.ExecWB(7, 1);";if(t){g+="window.close();"}g+="<\/script>"}g+="</body></html>";s.open();s.write(g);s.close();if(f){n.onload=function(){(o&&b.isIE())||n.print();if(m&&t&&(!(o&&b.isIE()))){n.close()}}}return n},hideElem:function(f){d("."+e).addClass(c);if(!f){return}if(f instanceof Array){for(var g=0;g<f.length;g++){d(f[g]).addClass(c)}}else{d(f).addClass(c)}},showElem:function(f){d("."+e).removeClass(c);if(!f){return}if(f instanceof Array){for(var g=0;g<f.length;g++){d(f[g]).removeClass(c)}}else{d(f).removeClass(c)}},getCommonCss:function(g){var f=("."+e+"."+c+" {");f+="        display: none !important;";f+="   }";f+="   .print-table {";f+="        border: none;";f+="        border-collapse: collapse;";f+="        width: 100%;";f+="   }";f+="   .print-table td, .print-table th {";f+="        color: #333;";f+="        padding: 9px 15px;";f+="        word-break: break-all;";f+="        border: 1px solid #666;";f+="   }";if(g){f+=("."+e+" {");f+="     display: none !important;";f+="}"}return f},makeHtml:function(j){var i=j.title;var g=j.style;var f=j.body;if(i==undefined){i="打印窗口"}var h='<!DOCTYPE html><html lang="en">';h+='    <head><meta charset="UTF-8">';h+=("        <title>"+i+"</title>");g&&(h+=g);h+="   </head>";h+="   <body>";f&&(h+=f);h+="   </body>";h+="   </html>";return h},isIE:function(){return(!!window.ActiveXObject||"ActiveXObject" in window)},isEdge:function(){return navigator.userAgent.indexOf("Edge")!=-1},isFirefox:function(){return navigator.userAgent.indexOf("Firefox")!=-1}};d("head").append("<style>"+b.getCommonCss()+"</style>");a("printer",b)});
+layui.define(["jquery"], function (exports) {
+    var $ = layui.jquery;
+    var hideClass = 'hide-print';  // 打印时隐藏
+    var printingClass = 'printing';  // 正在打印
+
+    var printer = {
+        // 打印当前页面
+        print: function (param) {
+            window.focus();  // 让当前窗口获取焦点
+            if (!param) {
+                param = {};
+            }
+            var hide = param.hide;  // 需要隐藏的元素
+            var horizontal = param.horizontal;  // 纸张是否是横向
+            var iePreview = param.iePreview;  // 兼容ie打印预览
+            var close = param.close;  // 打印完是否关闭打印窗口
+            var blank = param.blank;  // 是否打开新窗口
+            // 设置参数默认值
+            if (iePreview == undefined) {
+                iePreview = true;
+            }
+            if (blank == undefined && window != top && iePreview && printer.isIE()) {
+                blank = true;
+            }
+            if (close == undefined) {
+                close = true;
+                if (iePreview && blank && printer.isIE()) {
+                    close = false;
+                }
+            }
+            // 打印方向控制
+            $('#page-print-set').remove();
+            var htmlStr = '<div id="page-print-set">';
+            htmlStr += '      <style type="text/css" media="print">';
+            if (horizontal) {
+                htmlStr += '     @page { size: landscape; }';
+            } else {
+                htmlStr += '     @page { size: portrait; }';
+            }
+            htmlStr += '      </style>';
+            // 打印预览兼容ie
+            if (iePreview && printer.isIE()) {
+                htmlStr += '  <object id="WebBrowser" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" width="0" height="0"></object>';
+                htmlStr += '  <script>WebBrowser.ExecWB(7, 1);';
+                if (close) {
+                    htmlStr += '  window.close();';
+                }
+                htmlStr += '  </script>';
+            }
+            htmlStr += '   </div>';
+            // 打印
+            printer.hideElem(hide);
+            // 打印iframe兼容ie
+            var pWindow, pDocument;
+            if (blank) {
+                // 创建打印窗口
+                pWindow = window.open('', '_blank');
+                pDocument = pWindow.document;
+                pWindow.focus();  // 让打印窗口获取焦点
+                // 写入内容到打印窗口
+                var htmlOld = document.getElementsByTagName('html')[0].innerHTML;
+                htmlOld += htmlStr;
+                pDocument.open();
+                pDocument.write(htmlOld);
+                pDocument.close();
+                pWindow.onload = function () {
+                    (iePreview && printer.isIE()) || pWindow.print();
+                    if (blank && close && (!(iePreview && printer.isIE()))) {
+                        pWindow.close();
+                    }
+                    printer.showElem(hide);
+                };
+            } else {
+                pWindow = window;
+                $('body').append(htmlStr);
+                (iePreview && printer.isIE()) || pWindow.print();
+                printer.showElem(hide);
+            }
+        },
+        // 打印html字符串
+        printHtml: function (param) {
+            if (!param) {
+                param = {};
+            }
+            var html = param.html;  // 打印的html内容
+            var blank = param.blank;  // 是否打开新窗口
+            var print = param.print;  // 是否自动调用打印
+            var close = param.close;  // 打印完是否关闭打印窗口
+            var horizontal = param.horizontal;  // 纸张是否是横向
+            var iePreview = param.iePreview;  // 兼容ie打印预览
+            // 设置参数默认值
+            if (print == undefined) {
+                print = true;
+            }
+            if (iePreview == undefined) {
+                iePreview = true;
+            }
+            if (printer.isIE() && blank == undefined) {
+                blank = true;
+            }
+            if (close == undefined) {
+                close = true;
+                if (iePreview && blank && printer.isIE()) {
+                    close = false;
+                }
+            }
+            // 创建打印窗口
+            var pWindow, pDocument;
+            if (blank) {
+                pWindow = window.open('', '_blank');
+                pDocument = pWindow.document;
+            } else {
+                var printFrame = document.getElementById('printFrame');
+                if (!printFrame) {
+                    $('body').append('<iframe id="printFrame" style="display: none;"></iframe>');
+                    printFrame = document.getElementById('printFrame');
+                }
+                pWindow = printFrame.contentWindow;
+                pDocument = printFrame.contentDocument || printFrame.contentWindow.document;
+            }
+            pWindow.focus();  // 让打印窗口获取焦点
+            // 写入内容到打印窗口
+            if (html) {
+                // 加入公共css
+                html += ('<style>' + printer.getCommonCss(true) + '</style>');
+                // 打印方向控制
+                html += '<style type="text/css" media="print">';
+                if (horizontal) {
+                    html += '@page { size: landscape; }';
+                } else {
+                    html += '@page { size: portrait; }';
+                }
+                html += '</style>';
+                // 打印预览兼容ie
+                if (iePreview && printer.isIE()) {
+                    html += '<object id="WebBrowser" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" width="0" height="0"></object>';
+                    html += '<script>WebBrowser.ExecWB(7, 1);';
+                    if (close) {
+                        html += 'window.close();';
+                    }
+                    html += '</script>';
+                }
+                // 写入
+                pDocument.open();
+                pDocument.write(html);
+                pDocument.close();
+            }
+            // 打印
+            if (print) {
+                pWindow.onload = function () {
+                    (iePreview && printer.isIE()) || pWindow.print();
+                    if (blank && close && (!(iePreview && printer.isIE()))) {
+                        pWindow.close();
+                    }
+                };
+            }
+            return pWindow;
+        },
+        // 分页打印
+        printPage: function (param) {
+            if (!param) {
+                param = {};
+            }
+            var htmls = param.htmls;  // 打印的内容
+            var style = param.style;  // 打印的样式
+            var horizontal = param.horizontal;  // 纸张是否是横向
+            var padding = param.padding;  // 页边距
+            var blank = param.blank;  // 是否打开新窗口
+            var print = param.print;  // 是否自动调用打印
+            var close = param.close;  // 打印完是否关闭打印窗口
+            var isDebug = param.debug;  // 调试模式
+            var iePreview = param.iePreview;  // 兼容ie打印预览
+            // 设置参数默认值
+            if (print == undefined) {
+                print = true;
+            }
+            if (iePreview == undefined) {
+                iePreview = true;
+            }
+            if (printer.isIE() && blank == undefined) {
+                blank = true;
+            }
+            if (close == undefined) {
+                close = true;
+                if (iePreview && blank && printer.isIE()) {
+                    close = false;
+                }
+            }
+            if (printer.isEdge() || printer.isFirefox()) {
+                padding = undefined;
+            }
+            // 创建打印窗口
+            var pWindow, pDocument;
+            if (blank) {
+                pWindow = window.open('', '_blank');
+                pDocument = pWindow.document;
+            } else {
+                var printFrame = document.getElementById('printFrame');
+                if (!printFrame) {
+                    $('body').append('<iframe id="printFrame" style="display: none;"></iframe>');
+                    printFrame = document.getElementById('printFrame');
+                }
+                pWindow = printFrame.contentWindow;
+                pDocument = printFrame.contentDocument || printFrame.contentWindow.document;
+            }
+            pWindow.focus();  // 让打印窗口获取焦点
+            // 拼接打印内容
+            var htmlStr = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>打印窗口</title>';
+            style && (htmlStr += style);  // 写入自定义css
+            // 控制分页的css
+            htmlStr += '<style>';
+            htmlStr += 'body {';
+            htmlStr += '    margin: 0 !important;';
+            htmlStr += '} ';
+            // 自定义边距竖屏样式
+            htmlStr += '.print-page .print-page-item {';
+            htmlStr += '    width: 793px !important;';
+            htmlStr += '    height: 1122px !important;';
+            htmlStr += '    padding: ' + (padding ? padding : '55px') + ' !important;';
+            htmlStr += '    box-sizing: border-box !important;';
+            htmlStr += '    overflow: hidden !important;';
+            htmlStr += '    border: none !important;';
+            htmlStr += '} ';
+            // 自定义边距横屏样式
+            htmlStr += '.print-page.page-horizontal .print-page-item {';
+            htmlStr += '    width: 1122px !important;';
+            htmlStr += '    height: 792px !important;';
+            htmlStr += '} ';
+            // 调试模式样式
+            htmlStr += '.print-page.page-debug .print-page-item {';
+            htmlStr += '    border: 1px solid red !important;';
+            htmlStr += '} ';
+            // 谷歌默认边距竖屏样式
+            htmlStr += '.print-page.padding-default .print-page-item {';
+            htmlStr += '    width: 713px !important;';
+            htmlStr += '    height: 1042px !important;';
+            htmlStr += '    padding: 0 !important;';
+            htmlStr += '} ';
+            // 谷歌默认边距横屏样式
+            htmlStr += '.print-page.padding-default.page-horizontal .print-page-item {';
+            htmlStr += '    width: 1042px !important;';
+            htmlStr += '    height: 712px !important;';
+            htmlStr += '} ';
+            // ie默认边距竖屏样式
+            htmlStr += '.print-page.padding-default.page-ie .print-page-item {';
+            htmlStr += '    width: 645px !important;';
+            htmlStr += '    height: 977px !important;';
+            htmlStr += '} ';
+            // ie默认边距横屏样式
+            htmlStr += '.print-page.padding-default.page-ie.page-horizontal .print-page-item {';
+            htmlStr += '    width: 978px !important;';
+            htmlStr += '    height: 648px !important;';
+            htmlStr += '} ';
+            // firefox默认边距竖屏样式
+            htmlStr += '.print-page.padding-default.page-firefox .print-page-item {';
+            htmlStr += '    width: 720px !important;';
+            htmlStr += '    height: 955px !important;';
+            htmlStr += '} ';
+            // firefox默认边距横屏样式
+            htmlStr += '.print-page.padding-default.page-firefox.page-horizontal .print-page-item {';
+            htmlStr += '    width: 955px !important;';
+            htmlStr += '    height: 720px !important;';
+            htmlStr += '} ';
+            htmlStr += printer.getCommonCss(true);  // 加入公共css
+            htmlStr += '</style>';
+            // 控制打印方向
+            htmlStr += '<style type="text/css" media="print">';
+            if (horizontal) {
+                htmlStr += '@page { size: landscape; }';
+            } else {
+                htmlStr += '@page { size: portrait; }';
+            }
+            htmlStr += '</style>';
+            htmlStr += '</head><body>';
+            // 拼接分页内容
+            if (htmls && (htmls instanceof Array)) {
+                var pageClass = horizontal ? ' page-horizontal' : '';  // 横向样式
+                pageClass += padding == undefined ? ' padding-default' : '';  // 谷歌默认边距
+                pageClass += isDebug ? ' page-debug' : '';  // 调试模式
+                if (printer.isIE() || printer.isEdge()) {
+                    pageClass += ' page-ie';  // ie默认边距
+                } else if (printer.isFirefox()) {
+                    pageClass += ' page-firefox';  // firefox默认边距
+                }
+                htmlStr += '<div class="print-page' + pageClass + '">';
+                for (var i = 0; i < htmls.length; i++) {
+                    htmlStr += '<div class="print-page-item">';
+                    htmlStr += htmls[i];
+                    htmlStr += '</div>';
+                }
+                htmlStr += '</div>';
+            }
+            // 兼容ie打印预览
+            if (iePreview && printer.isIE()) {
+                htmlStr += '<object id="WebBrowser" classid="clsid:8856F961-340A-11D0-A96B-00C04FD705A2" width="0" height="0"></object>';
+                htmlStr += '<script>WebBrowser.ExecWB(7, 1);';
+                if (close) {
+                    htmlStr += 'window.close();';
+                }
+                htmlStr += '</script>';
+            }
+            htmlStr += '</body></html>';
+            // 写入打印内容到打印窗口
+            pDocument.open();
+            pDocument.write(htmlStr);
+            pDocument.close();
+            // 打印
+            if (print) {
+                pWindow.onload = function () {
+                    (iePreview && printer.isIE()) || pWindow.print();
+                    if (blank && close && (!(iePreview && printer.isIE()))) {
+                        pWindow.close();
+                    }
+                };
+            }
+            return pWindow;
+        },
+        // 隐藏元素
+        hideElem: function (elems) {
+            $('.' + hideClass).addClass(printingClass);
+            if (!elems) {
+                return;
+            }
+            if (elems instanceof Array) {
+                for (var i = 0; i < elems.length; i++) {
+                    $(elems[i]).addClass(printingClass);
+                }
+            } else {
+                $(elems).addClass(printingClass);
+            }
+        },
+        // 取消隐藏
+        showElem: function (elems) {
+            $('.' + hideClass).removeClass(printingClass);
+            if (!elems) {
+                return;
+            }
+            if (elems instanceof Array) {
+                for (var i = 0; i < elems.length; i++) {
+                    $(elems[i]).removeClass(printingClass);
+                }
+            } else {
+                $(elems).removeClass(printingClass);
+            }
+        },
+        // 打印公共样式
+        getCommonCss: function (isPrinting) {
+            var cssStr = ('.' + hideClass + '.' + printingClass + ' {');
+            cssStr += '        display: none !important;';
+            cssStr += '   }';
+            // 表格样式
+            cssStr += '   .print-table {';
+            cssStr += '        border: none;';
+            cssStr += '        border-collapse: collapse;';
+            cssStr += '        width: 100%;';
+            cssStr += '   }';
+            cssStr += '   .print-table td, .print-table th {';
+            cssStr += '        color: #333;';
+            cssStr += '        padding: 9px 15px;';
+            cssStr += '        word-break: break-all;';
+            cssStr += '        border: 1px solid #666;';
+            cssStr += '   }';
+            //
+            if (isPrinting) {
+                cssStr += ('.' + hideClass + ' {');
+                cssStr += '     display: none !important;';
+                cssStr += '}';
+            }
+            return cssStr;
+        },
+        // 拼接html
+        makeHtml: function (param) {
+            var title = param.title;
+            var style = param.style;
+            var body = param.body;
+            if (title == undefined) {
+                title = '打印窗口';
+            }
+            var htmlStr = '<!DOCTYPE html><html lang="en">';
+            htmlStr += '    <head><meta charset="UTF-8">';
+            htmlStr += ('        <title>' + title + '</title>');
+            style && (htmlStr += style);
+            htmlStr += '   </head>';
+            htmlStr += '   <body>';
+            body && (htmlStr += body);
+            htmlStr += '   </body>';
+            htmlStr += '   </html>';
+            return htmlStr;
+        },
+        // 判断是否是ie
+        isIE: function () {
+            return (!!window.ActiveXObject || "ActiveXObject" in window);
+        },
+        // 判断是否是Edge
+        isEdge: function () {
+            return navigator.userAgent.indexOf("Edge") != -1;
+        },
+        // 判断是否是Firefox
+        isFirefox: function () {
+            return navigator.userAgent.indexOf("Firefox") != -1;
+        }
+    };
+
+    $('head').append('<style>' + printer.getCommonCss() + '</style>');
+    exports("printer", printer);
+});
