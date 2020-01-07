@@ -47,7 +47,7 @@
                             <select name="admin_role_id" lay-verify="required">
                                 {notempty name="role"}
                                 {volist name="role" id="voRole"}
-                                <option value="{$voRole.id}">{$voRole.name}</option>
+                                <option value="{$voRole.id}" {eq name="$voRole.id" value="$data.admin_role_id"}selected{/eq}>{$voRole.name}</option>
                                 {/volist}
                                 {/notempty}
                             </select>
