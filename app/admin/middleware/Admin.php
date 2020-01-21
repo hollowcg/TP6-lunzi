@@ -17,9 +17,10 @@ class Admin
     {
         //获取当前用户
         $admin_id = Session::get('admin.id');
-
+        View::assign('loginout',false);
 //        判断是否有session记录，如果没有输出数据，前台跳转
         if (empty($admin_id)) {
+            View::assign('loginout',true);
             return redirect((string) url('/login/index'));
         }
 

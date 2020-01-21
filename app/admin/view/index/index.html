@@ -90,8 +90,9 @@
 {include file="base/_script" /}
 <script>
     layui.use(['index'], function () {
-        var $ = layui.jquery;
-        var index = layui.index
+        var $ = layui.jquery
+        ,index = layui.index
+            ,loginOut = "{$loginout|default=''}";
 
         // 默认加载主页
         index.loadHome({
