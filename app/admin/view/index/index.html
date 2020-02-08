@@ -17,9 +17,6 @@
             </li>
         </ul>
         <ul class="layui-nav layui-layout-right">
-            <li class="layui-nav-item" lay-unselect>
-                <a ew-event="note" title="便签"><i class="layui-icon layui-icon-note"></i></a>
-            </li>
             <li class="layui-nav-item layui-hide-xs" lay-unselect>
                 <a ew-event="fullScreen" title="全屏"><i class="layui-icon layui-icon-screen-full"></i></a>
             </li>
@@ -39,7 +36,7 @@
                 </dl>
             </li>
             <li class="layui-nav-item" lay-unselect>
-                <a ew-event="theme" title="主题"><i class="layui-icon layui-icon-more-vertical"></i></a>
+                <a id="theme" title="主题"><i class="layui-icon layui-icon-more-vertical"></i></a>
             </li>
         </ul>
     </div>
@@ -89,9 +86,10 @@
 <!-- js部分 -->
 {include file="base/_script" /}
 <script>
-    layui.use(['index'], function () {
+    layui.use(['index','admin'], function () {
         var $ = layui.jquery
         ,index = layui.index
+            ,admin = layui.admin
             ,loginOut = "{$loginout|default=''}";
 
         // 默认加载主页
@@ -108,6 +106,12 @@
             window.location.href = "{:url('/login/logout')}";
         })
 
+        $("#theme").click(function () {
+            admin.popupRight({
+                type: 2,
+                content: "{:url('/index/tpl-theme')}"
+            });
+        })
         // 切换Tab自动刷新
         // $('.layui-body>.layui-tab[lay-filter="admin-pagetabs"]').attr('lay-autoRefresh', 'true');
     });

@@ -1,28 +1,23 @@
-﻿/** EasyWeb iframe v3.1.5 date:2019-10-05 License By http://easyweb.vip */
+/** EasyWeb iframe v3.1.6 date:2020-02-08 License By http://easyweb.vip */
 
 // 以下代码是配置layui扩展模块的目录，每个页面都需要引入
 layui.config({
-    version: '315',
-    // base: getProjectUrl() + 'assets/module/'
+    version: '316',
     base: '/static/admin/easyweb/module/'
 }).extend({
-    formSelects: 'formSelects/formSelects-v4',
-    treetable: 'treetable-lay/treetable',
     dropdown: 'dropdown/dropdown',
     notice: 'notice/notice',
-    step: 'step-lay/step',
-    dtree: 'dtree/dtree',
-    citypicker: 'city-picker/city-picker',
-    tableSelect: 'tableSelect/tableSelect',
-    Cropper: 'Cropper/Cropper',
-    zTree: 'zTree/zTree',
-    introJs: 'introJs/introJs',
+    cascader: 'cascader/cascader',
     fileChoose: 'fileChoose/fileChoose',
+    treeSelect: 'treeSelect/treeSelect',
+    step: 'step-lay/step',
+    treeTable: 'treeTable/treeTable',
     tagsInput: 'tagsInput/tagsInput',
-    Drag: 'Drag/Drag',
-    CKEDITOR: 'ckeditor/ckeditor',
     Split: 'Split/Split',
-    cascader: 'cascader/cascader'
+    Cropper: 'Cropper/Cropper',
+    citypicker: 'city-picker/city-picker',
+    zTree: 'zTree/zTree',
+    introJs: 'introJs/introJs'
 }).use(['layer', 'admin'], function () {
     var $ = layui.jquery;
     var layer = layui.layer;
@@ -31,7 +26,7 @@ layui.config({
     // 移除loading动画
     setTimeout(function () {
         admin.removeLoading();
-    }, window == top ? 600 : 100);
+    }, window === top ? 300 : 0);
 
 });
 
