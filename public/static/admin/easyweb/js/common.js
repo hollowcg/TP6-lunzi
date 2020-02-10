@@ -3,7 +3,9 @@
 // 以下代码是配置layui扩展模块的目录，每个页面都需要引入
 layui.config({
     version: '316',
-    base: '/static/admin/easyweb/module/'
+    base: '/static/admin/easyweb/module/',
+    // 默认主题
+    defaultTheme: 'theme-white',
 }).extend({
     dropdown: 'dropdown/dropdown',
     notice: 'notice/notice',
@@ -17,7 +19,8 @@ layui.config({
     Cropper: 'Cropper/Cropper',
     citypicker: 'city-picker/city-picker',
     zTree: 'zTree/zTree',
-    introJs: 'introJs/introJs'
+    introJs: 'introJs/introJs',
+    treetable: 'treetable-lay/treetable',
 }).use(['layer', 'admin'], function () {
     var $ = layui.jquery;
     var layer = layui.layer;
