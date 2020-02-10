@@ -81,7 +81,6 @@ return implode(', ', $result);
 <head>
     <title>系统发生错误</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link href='http://fonts.useso.com/css?family=Love+Ya+Like+A+Sister' rel='stylesheet' type='text/css'>
     <style type="text/css">
         body{
             font-family: 'Love Ya Like A Sister', cursive;
