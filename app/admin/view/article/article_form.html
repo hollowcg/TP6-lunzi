@@ -4,13 +4,13 @@
 <div class="layui-fluid">
     <div class="layui-card">
         <div class="layui-card-body layui-row">
-            <form id="modelAuthForm" lay-filter="modelAuthForm" class="layui-form model-form layui-form-pane">
+            <form id="modelAuthForm" lay-filter="modelAuthForm" class="layui-form model-form">
                 <input name="id" type="hidden" value="{$data.id}"/>
 
                 <div class="layui-col-md7">
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">文章名称</label>
+                        <label class="layui-form-label layui-form-required">文章名称</label>
                         <div class="layui-input-block">
                             <input name="title" placeholder="请输入" type="text" class="layui-input"
                                    lay-verType="tips" lay-verify="required" required autocomplete="off"
@@ -84,7 +84,7 @@
                                 <i class="layui-icon"></i>
                                 <p>直接上传，或将文件拖拽到此处,此处无需裁剪</p>
                                 {/notempty}
-                                
+
                             </div>
                         </div>
                         <label for="" class="layui-form-label" style="padding: 0;margin-top: 5px;">

@@ -1,12 +1,12 @@
 {include file="base/_meta" /}
 </head>
 <body>
-<form id="modelAuthForm" lay-filter="modelAuthForm" class="layui-form model-form layui-form-pane" style="padding: 20px;">
+<form id="modelAuthForm" lay-filter="modelAuthForm" class="layui-form model-form ">
     <input name="id" type="hidden" value="{$data.id}"/>
 
 
     <div class="layui-form-item">
-        <label class="layui-form-label">名称</label>
+        <label class="layui-form-label layui-form-required">名称</label>
         <div class="layui-input-block">
             <input name="name" placeholder="请输入" type="text" class="layui-input"
                    lay-verType="tips" lay-verify="required" required autocomplete="off" value="{$data.name}"/>
